@@ -1,0 +1,44 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "IA Chart Copilot Admin",
+  "version": "1.0.0",
+  "identifier": "co.iachartcopilot.admin",
+  "build": {
+    "frontendDist": "../src"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "IA Chart Copilot — Admin",
+        "width": 1100,
+        "height": 750,
+        "minWidth": 800,
+        "minHeight": 600,
+        "resizable": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src 'self' https://ia-chart-copilot.vercel.app http://localhost:3000 http://127.0.0.1:3000; style-src 'self' 'unsafe-inline'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "nsis"],
+    "publisher": "IA Chart Copilot",
+    "category": "Business",
+    "shortDescription": "Panel admin de licencias",
+    "longDescription": "Gestiona licencias y aprueba pagos manuales de IA Chart Copilot.",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "wix": {
+        "language": "es-ES"
+      }
+    }
+  }
+}

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IA Chart Copilot — Admin</title>
+  <style>
+    :root {
+      --bg:#0f1117; --panel:#181b25; --panel-2:#1f2330; --border:#2a2f3d;
+      --text:#e5e7eb; --muted:#9ca3af; --primary:#2196f3; --success:#22c55e;
+      --danger:#ef4444; --warning:#f59e0b;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { background:var(--bg); color:var(--text); font-family:-apple-system,"Segoe UI",Roboto,sans-serif; font-size:14px; }
+    header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; background:var(--panel); border-bottom:1px solid var(--border); }
+    header h1 { font-size:16px; } header .logo { font-size:20px; margin-right:8px; }
+    .config-bar { display:flex; gap:8px; align-items:center; padding:12px 20px; background:var(--panel-2); border-bottom:1px solid var(--border); flex-wrap:wrap; }
+    .config-bar input { background:var(--bg); border:1px solid var(--border); color:var(--text); padding:8px 10px; border-radius:6px; font-size:13px; }
+    .config-bar input#apiBase { width:280px; } .config-bar input#adminToken { width:220px; }
+    button { background:var(--primary); color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; }
+    button.ghost { background:transparent; border:1px solid var(--border); color:var(--text); }
+    button.approve { background:var(--success); } button.reject { background:var(--danger); }
+    .summary { display:flex; gap:16px; padding:16px 20px; }
+    .stat { background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px 20px; text-align:center; }
+    .stat .num { font-size:24px; font-weight:800; } .stat .lbl { font-size:11px; color:var(--muted); text-transform:uppercase; }
+    .stat.active .num { color:var(--success); } .stat.pending .num { color:var(--warning); }
+    .toolbar { padding:8px 20px; display:flex; gap:8px; align-items:center; }
+    .toolbar input { background:var(--panel-2); border:1px solid var(--border); color:var(--text); padding:8px 12px; border-radius:6px; flex:1; max-width:300px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th,td { text-align:left; padding:10px 20px; border-bottom:1px solid var(--border); }
+    th { background:var(--panel); color:var(--muted); font-size:11px; text-transform:uppercase; position:sticky; top:0; }
+    .badge { padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+    .badge.active { background:rgba(34,197,94,0.15); color:#86efac; }
+    .badge.pending { background:rgba(245,158,11,0.15); color:#fcd34d; }
+    .badge.revoked { background:rgba(239,68,68,0.15); color:#fca5a5; }
+    .method { font-size:11px; color:var(--muted); }
+    .empty { padding:40px; text-align:center; color:var(--muted); }
+    .msg { padding:10px 20px; font-size:13px; }
+    .msg.error { color:#fca5a5; } .msg.success { color:#86efac; }
+    code { background:var(--panel-2); padding:1px 5px; border-radius:3px; font-size:11px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span class="logo">📈</span> IA Chart Copilot — Admin</h1>
+    <span id="connStatus" class="method">Desconectado</span>
+  </header>
+
+  <div class="config-bar">
+    <input type="text" id="apiBase" placeholder="https://ia-chart-copilot.vercel.app">
+    <input type="password" id="adminToken" placeholder="Admin token">
+    <button id="btnConnect">Conectar</button>
+    <button class="ghost" id="btnRefresh">↻ Actualizar</button>
+  </div>
+
+  <div class="summary" id="summary"></div>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="🔍 Buscar por email...">
+    <select id="filterStatus" style="background:var(--panel-2);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:6px;">
+      <option value="">Todos</option>
+      <option value="active">Activas</option>
+      <option value="pending">Pendientes</option>
+      <option value="revoked">Revocadas</option>
+    </select>
+  </div>
+
+  <div id="msg"></div>
+
+  <table>
+    <thead>
+      <tr><th>Email</th><th>Nombre</th><th>Estado</th><th>Origen</th><th>Último pago</th><th>Acciones</th></tr>
+    </thead>
+    <tbody id="rows"><tr><td colspan="6" class="empty">Conecta para ver las licencias.</td></tr></tbody>
+  </table>
+
+  <script src="app.js"></script>
+</body>
+</html>

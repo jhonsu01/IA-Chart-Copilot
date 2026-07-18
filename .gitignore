@@ -1,0 +1,14 @@
+# Node
+node_modules/
+package-lock.json
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# Iconos generados por `tauri icon` (se regeneran desde app-icon.png)
+src-tauri/icons/
+
+# OS
+.DS_Store
+Thumbs.db

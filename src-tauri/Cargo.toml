@@ -1,0 +1,17 @@
+[package]
+name = "iachart-admin"
+version = "1.0.0"
+description = "Panel admin de licencias IA Chart Copilot"
+authors = ["jhonsu01"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
