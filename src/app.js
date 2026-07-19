@@ -8,6 +8,10 @@ let CONFIG = { apiBase: "", token: "" };
 let allLicenses = [];
 let accounts = []; // cuentas editables en la pestaña Configuración
 
+// Traducciones de estados a español (la clase CSS sigue usando el valor original).
+const ESTADO_ES = { active: "Activa", pending: "Pendiente", revoked: "Revocada" };
+const PAGO_ES = { approved: "aprobado", pending: "pendiente", declined: "rechazado", error: "error" };
+
 document.addEventListener("DOMContentLoaded", () => {
   CONFIG.apiBase = localStorage.getItem("apiBase") || "https://ia-chart-copilot.vercel.app";
   CONFIG.token = localStorage.getItem("adminToken") || "";
@@ -122,7 +126,7 @@ function render() {
     const lastPay = (l.payments && l.payments[0]) || null;
     const hasReceipt = (l.payments || []).some((p) => p.method === "manual" && p.has_receipt);
     let payInfo = lastPay
-      ? `<span class="method">${lastPay.method} · ${lastPay.status}${lastPay.approved_by ? " · " + lastPay.approved_by : ""}</span>`
+      ? `<span class="method">${lastPay.method} · ${PAGO_ES[lastPay.status] || lastPay.status}${lastPay.approved_by ? " · " + lastPay.approved_by : ""}</span>`
       : `<span class="method">—</span>`;
     if (hasReceipt) {
       payInfo += ` <button class="ghost sm" data-email="${esc(l.email)}" data-action="receipt">📎 Ver comprobante</button>`;
@@ -134,7 +138,7 @@ function render() {
     return `<tr>
       <td>${esc(l.email)}</td>
       <td>${esc(l.name || "")}</td>
-      <td><span class="badge ${l.status}">${l.status}</span></td>
+      <td><span class="badge ${l.status}">${ESTADO_ES[l.status] || l.status}</span></td>
       <td class="method">${l.activation_source || "—"}</td>
       <td>${payInfo}</td>
       <td>${actions}</td>
