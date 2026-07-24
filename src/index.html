@@ -2,38 +2,47 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>IA Chart Copilot — Admin</title>
   <style>
     :root {
       --bg:#0f1117; --panel:#181b25; --panel-2:#1f2330; --border:#2a2f3d;
-      --text:#e5e7eb; --muted:#9ca3af; --primary:#2196f3; --success:#22c55e;
+      --text:#e5e7eb; --muted:#9ca3af; --primary:#2196f3; --primary-hover:#1976d2; --success:#22c55e;
       --danger:#ef4444; --warning:#f59e0b;
+      --safe-top: env(safe-area-inset-top); --safe-bottom: env(safe-area-inset-bottom);
+      --safe-left: env(safe-area-inset-left); --safe-right: env(safe-area-inset-right);
     }
     * { box-sizing:border-box; margin:0; padding:0; }
-    body { background:var(--bg); color:var(--text); font-family:-apple-system,"Segoe UI",Roboto,sans-serif; font-size:14px; }
-    header { display:flex; align-items:center; justify-content:space-between; padding:14px 20px; background:var(--panel); border-bottom:1px solid var(--border); }
+    body { background:var(--bg); color:var(--text); font-family:-apple-system,"Segoe UI",Roboto,sans-serif; font-size:14px; padding-bottom:var(--safe-bottom); }
+    header { display:flex; align-items:center; justify-content:space-between; gap:8px;
+      padding:calc(14px + var(--safe-top)) calc(20px + var(--safe-right)) 14px calc(20px + var(--safe-left));
+      background:var(--panel); border-bottom:1px solid var(--border); }
     header h1 { font-size:16px; } header .logo { font-size:20px; margin-right:8px; }
-    .config-bar { display:flex; gap:8px; align-items:center; padding:12px 20px; background:var(--panel-2); border-bottom:1px solid var(--border); flex-wrap:wrap; }
-    .config-bar input { background:var(--bg); border:1px solid var(--border); color:var(--text); padding:8px 10px; border-radius:6px; font-size:13px; }
+    .config-bar { display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+      padding:12px calc(20px + var(--safe-right)) 12px calc(20px + var(--safe-left));
+      background:var(--panel-2); border-bottom:1px solid var(--border); }
+    .config-bar input { background:var(--bg); border:1px solid var(--border); color:var(--text); padding:9px 10px; border-radius:6px; font-size:13px; }
     .config-bar input#apiBase { width:280px; } .config-bar input#adminToken { width:220px; }
-    button { background:var(--primary); color:#fff; border:none; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; }
+    button { background:var(--primary); color:#fff; border:none; padding:9px 14px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; }
+    button:active { opacity:.85; }
     button.ghost { background:transparent; border:1px solid var(--border); color:var(--text); }
     button.approve { background:var(--success); } button.reject { background:var(--danger); }
-    button.sm { padding:4px 8px; font-size:12px; }
-    .tabs { display:flex; gap:4px; padding:10px 20px 0; background:var(--panel); border-bottom:1px solid var(--border); }
+    button.sm { padding:6px 10px; font-size:12px; }
+    .tabs { display:flex; gap:4px; padding:10px calc(20px + var(--safe-left)) 0; background:var(--panel); border-bottom:1px solid var(--border); }
     .tab { background:transparent; color:var(--muted); border:none; border-bottom:2px solid transparent; border-radius:0; padding:10px 16px; }
     .tab.active { color:var(--text); border-bottom-color:var(--primary); }
-    .summary { display:flex; gap:16px; padding:16px 20px; }
-    .stat { background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px 20px; text-align:center; }
+    .pad { padding-left:calc(var(--safe-left)); padding-right:calc(var(--safe-right)); }
+    .summary { display:flex; gap:16px; padding:16px calc(20px + var(--safe-right)) 16px calc(20px + var(--safe-left)); }
+    .stat { background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:12px 20px; text-align:center; flex:0 0 auto; }
     .stat .num { font-size:24px; font-weight:800; } .stat .lbl { font-size:11px; color:var(--muted); text-transform:uppercase; }
     .stat.active .num { color:var(--success); } .stat.pending .num { color:var(--warning); }
-    .toolbar { padding:8px 20px; display:flex; gap:8px; align-items:center; }
-    .toolbar input { background:var(--panel-2); border:1px solid var(--border); color:var(--text); padding:8px 12px; border-radius:6px; flex:1; max-width:300px; }
+    .toolbar { padding:8px calc(20px + var(--safe-right)) 8px calc(20px + var(--safe-left)); display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .toolbar input { background:var(--panel-2); border:1px solid var(--border); color:var(--text); padding:9px 12px; border-radius:6px; flex:1; min-width:160px; max-width:300px; }
+    .table-wrap { overflow-x:auto; }
     table { width:100%; border-collapse:collapse; font-size:13px; }
     th,td { text-align:left; padding:10px 20px; border-bottom:1px solid var(--border); }
     th { background:var(--panel); color:var(--muted); font-size:11px; text-transform:uppercase; position:sticky; top:0; }
-    .badge { padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; }
+    .badge { padding:3px 9px; border-radius:10px; font-size:11px; font-weight:600; }
     .badge.active { background:rgba(34,197,94,0.15); color:#86efac; }
     .badge.pending { background:rgba(245,158,11,0.15); color:#fcd34d; }
     .badge.revoked { background:rgba(239,68,68,0.15); color:#fca5a5; }
@@ -43,30 +52,58 @@
     .msg.error { color:#fca5a5; } .msg.success { color:#86efac; }
     code { background:var(--panel-2); padding:1px 5px; border-radius:3px; font-size:11px; }
     /* Config */
-    .cfg { max-width:720px; padding:24px 20px; }
+    .cfg { max-width:720px; padding:24px calc(20px + var(--safe-right)) 24px calc(20px + var(--safe-left)); }
     .cfg h2 { font-size:15px; margin-bottom:6px; }
     .cfg .hint { color:var(--muted); font-size:12px; margin-bottom:16px; }
-    .switch-row { display:flex; align-items:center; justify-content:space-between; background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:14px 16px; margin-bottom:10px; }
+    .switch-row { display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:14px 16px; margin-bottom:10px; }
     .switch-row .desc { font-size:12px; color:var(--muted); }
-    .toggle { position:relative; width:44px; height:24px; }
+    .toggle { position:relative; width:44px; height:24px; flex:0 0 auto; }
     .toggle input { opacity:0; width:0; height:0; }
     .slider { position:absolute; cursor:pointer; inset:0; background:var(--panel-2); border:1px solid var(--border); border-radius:24px; transition:.2s; }
     .slider:before { content:""; position:absolute; height:16px; width:16px; left:4px; top:3px; background:#fff; border-radius:50%; transition:.2s; }
     .toggle input:checked + .slider { background:var(--primary); border-color:var(--primary); }
     .toggle input:checked + .slider:before { transform:translateX(19px); }
     .acct { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; margin-bottom:8px; }
-    .acct input { background:var(--panel-2); border:1px solid var(--border); color:var(--text); padding:8px 10px; border-radius:6px; font-size:13px; }
+    .acct input { background:var(--panel-2); border:1px solid var(--border); color:var(--text); padding:9px 10px; border-radius:6px; font-size:13px; }
     .acct button { background:var(--danger); }
     /* Modal */
-    .modal { position:fixed; inset:0; background:rgba(0,0,0,0.8); display:none; align-items:center; justify-content:center; z-index:50; }
+    .modal { position:fixed; inset:0; background:rgba(0,0,0,0.8); display:none; align-items:center; justify-content:center; z-index:50; padding:16px; }
     .modal.open { display:flex; }
-    .modal .box { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px; max-width:90vw; max-height:90vh; overflow:auto; }
-    .modal img { max-width:80vw; max-height:75vh; border-radius:6px; display:block; }
+    .modal .box { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px; max-width:95vw; max-height:90vh; overflow:auto; }
+    .modal img { max-width:88vw; max-height:75vh; border-radius:6px; display:block; }
     .modal .close { float:right; background:var(--panel-2); border:1px solid var(--border); }
+    /* Banner de notificación */
+    .notif-banner { position:fixed; left:12px; right:12px; top:calc(10px + var(--safe-top)); z-index:100;
+      background:var(--primary); color:#fff; padding:14px 16px; border-radius:12px; box-shadow:0 6px 24px rgba(0,0,0,.45);
+      font-size:14px; font-weight:600; display:none; cursor:pointer; }
+    .notif-banner.show { display:block; animation:slidein .25s ease; }
+    @keyframes slidein { from { transform:translateY(-16px); opacity:0; } to { transform:translateY(0); opacity:1; } }
     .hidden { display:none; }
+    /* ---- Responsive móvil ---- */
+    @media (max-width: 680px) {
+      header h1 { font-size:15px; }
+      .config-bar { flex-direction:column; align-items:stretch; }
+      .config-bar input#apiBase, .config-bar input#adminToken { width:100%; }
+      .config-bar .row { display:flex; gap:8px; }
+      .config-bar .row button { flex:1; }
+      .summary { gap:8px; }
+      .stat { flex:1 1 40%; padding:10px 8px; }
+      .stat .num { font-size:20px; }
+      /* Tabla -> tarjetas */
+      table, tbody, tr, td { display:block; width:100%; }
+      thead { display:none; }
+      tr { background:var(--panel); border:1px solid var(--border); border-radius:10px; margin:0 12px 10px; padding:10px 4px; }
+      td { border:none; padding:6px 14px; }
+      td:before { content:attr(data-label); display:block; color:var(--muted); font-size:10px; text-transform:uppercase; margin-bottom:2px; }
+      td.actions { display:flex; gap:8px; }
+      td.actions button { flex:1; padding:12px; font-size:14px; }
+      td.actions button.ghost, td.actions .method { flex:1; }
+    }
   </style>
 </head>
 <body>
+  <div class="notif-banner" id="notifBanner"></div>
+
   <header>
     <h1><span class="logo">📈</span> IA Chart Copilot — Admin</h1>
     <span id="connStatus" class="method">Desconectado</span>
@@ -75,8 +112,10 @@
   <div class="config-bar">
     <input type="text" id="apiBase" placeholder="https://ia-chart-copilot.vercel.app">
     <input type="password" id="adminToken" placeholder="Admin token">
-    <button id="btnConnect">Conectar</button>
-    <button class="ghost" id="btnRefresh">↻ Actualizar</button>
+    <div class="row">
+      <button id="btnConnect">Conectar</button>
+      <button class="ghost" id="btnRefresh">↻ Actualizar</button>
+    </div>
   </div>
 
   <div class="tabs">
@@ -89,20 +128,23 @@
     <div class="summary" id="summary"></div>
     <div class="toolbar">
       <input type="text" id="search" placeholder="🔍 Buscar por email...">
-      <select id="filterStatus" style="background:var(--panel-2);border:1px solid var(--border);color:var(--text);padding:8px;border-radius:6px;">
+      <select id="filterStatus" style="background:var(--panel-2);border:1px solid var(--border);color:var(--text);padding:9px;border-radius:6px;">
         <option value="">Todos</option>
         <option value="active">Activas</option>
         <option value="pending">Pendientes</option>
         <option value="revoked">Revocadas</option>
       </select>
+      <span id="autoInfo" class="method"></span>
     </div>
     <div id="msg"></div>
-    <table>
-      <thead>
-        <tr><th>Email</th><th>Nombre</th><th>Estado</th><th>Origen</th><th>Último pago</th><th>Acciones</th></tr>
-      </thead>
-      <tbody id="rows"><tr><td colspan="6" class="empty">Conecta para ver las licencias.</td></tr></tbody>
-    </table>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Email</th><th>Nombre</th><th>Estado</th><th>Origen</th><th>Último pago</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="rows"><tr><td colspan="6" class="empty">Conecta para ver las licencias.</td></tr></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- VISTA: CONFIGURACIÓN -->

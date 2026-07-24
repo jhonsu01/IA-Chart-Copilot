@@ -1,6 +1,6 @@
 [package]
 name = "iachart-admin"
-version = "1.0.2"
+version = "1.0.3"
 description = "Panel admin de licencias IA Chart Copilot"
 authors = ["jhonsu01"]
 edition = "2021"
