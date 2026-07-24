@@ -282,10 +282,10 @@ function renderAccounts() {
   if (accounts.length === 0) { box.innerHTML = `<div class="method">Sin cuentas. Agrega al menos una para recibir transferencias.</div>`; return; }
   box.innerHTML = accounts.map((a, i) => `
     <div class="acct">
-      <input placeholder="Medio (ej: Nequi)" value="${esc(a.label)}" data-i="${i}" data-f="label">
-      <input placeholder="Número / llave" value="${esc(a.value)}" data-i="${i}" data-f="value">
-      <input placeholder="A nombre de... (opcional)" value="${esc(a.hint)}" data-i="${i}" data-f="hint">
-      <button class="sm" data-del="${i}">✕</button>
+      <div class="f"><span class="flbl">Medio</span><input placeholder="Medio (ej: Nequi)" value="${esc(a.label)}" data-i="${i}" data-f="label"></div>
+      <div class="f"><span class="flbl">Número / llave</span><input placeholder="Número / llave" value="${esc(a.value)}" data-i="${i}" data-f="value"></div>
+      <div class="f"><span class="flbl">A nombre de</span><input placeholder="A nombre de... (opcional)" value="${esc(a.hint)}" data-i="${i}" data-f="hint"></div>
+      <button class="sm" data-del="${i}" title="Eliminar cuenta">✕ Eliminar</button>
     </div>`).join("");
   box.querySelectorAll("input").forEach((inp) => {
     inp.addEventListener("input", () => { accounts[inp.dataset.i][inp.dataset.f] = inp.value; });
