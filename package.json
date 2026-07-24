@@ -1,6 +1,6 @@
 {
   "name": "iachart-admin",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "description": "Panel admin (Tauri) para gestionar licencias y aprobar pagos manuales",
   "scripts": {
