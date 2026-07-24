@@ -1,9 +1,15 @@
 [package]
 name = "iachart-admin"
-version = "1.0.3"
+version = "1.0.4"
 description = "Panel admin de licencias IA Chart Copilot"
 authors = ["jhonsu01"]
 edition = "2021"
+
+# Tauri v2 móvil (Android/iOS) compila la app como librería (cdylib).
+# El escritorio usa la misma lib desde main.rs.
+[lib]
+name = "iachart_admin_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
